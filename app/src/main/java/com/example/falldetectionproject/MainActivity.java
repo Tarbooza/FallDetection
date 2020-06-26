@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -21,6 +22,8 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import java.text.DecimalFormat;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
@@ -78,9 +81,30 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 || super.onSupportNavigateUp();
     }
 
+
     @Override
-    public void onSensorChanged(SensorEvent event) {
-        Log.d(TAG, "onSensorChanged: x:" + event.values[0] + "y: " + event.values[1] + "z: " + event.values[2]);
+    public void onSensorChanged(SensorEvent foEvent) {
+        Log.d(TAG, "onSensorChanged: x:" + foEvent.values[0] + "  y: " + foEvent.values[1] + "  z: " + foEvent.values[2]);
+        if (foEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+
+            double loX = foEvent.values[0];
+            double loY = foEvent.values[1];
+            double loZ = foEvent.values[2];
+
+            double loAccelerationReader = Math.sqrt(Math.pow(loX, 2)
+                    + Math.pow(loY, 2)
+                    + Math.pow(loZ, 2));
+
+            DecimalFormat precision = new DecimalFormat("0.00");
+            double ldAccRound = Double.parseDouble(precision.format(loAccelerationReader));
+            Log.d(TAG, "onSensorChanged: " + ldAccRound);
+            if (ldAccRound > 13.5) {
+                //Do your stuff
+                Log.d(TAG, "FALL DETECTED!!!!!");
+                Toast.makeText(this, "FALL DETECTED!!!!!", Toast.LENGTH_LONG).show();
+
+            }
+        }
     }
 
     @Override
