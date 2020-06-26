@@ -1,6 +1,12 @@
 package com.example.falldetectionproject;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 
@@ -16,9 +22,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private AppBarConfiguration mAppBarConfiguration;
+    private static final String TAG = "Main Activity";
+
+    private SensorManager sensorManager;
+    Sensor accelerometer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        Log.d(TAG, "onCreate: Starting Sensor Service");
+        sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        Log.d(TAG, "onCreate: Registered Accelerometer Listener");
     }
 
     @Override
@@ -59,5 +76,15 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        Log.d(TAG, "onSensorChanged: x:" + event.values[0] + "y: " + event.values[1] + "z: " + event.values[2]);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }

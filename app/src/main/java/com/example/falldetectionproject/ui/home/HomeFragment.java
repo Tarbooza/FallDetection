@@ -1,5 +1,7 @@
 package com.example.falldetectionproject.ui.home;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,4 +34,6 @@ public class HomeFragment extends Fragment {
         });
         return root;
     }
+
+
 }
