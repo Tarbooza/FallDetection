@@ -31,14 +31,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp">
 
-        <EditText
-            android:id="@+id/reg_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Name"
 
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        </EditText>
 
         <EditText
             android:id="@+id/reg_phoneNo"
@@ -56,15 +49,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#000"
-        android:onClick="onClickGo"
-        android:text="GO"
+        android:onClick="onClickSave"
+        android:text="Save"
         android:textColor="#fff"
         android:transitionName="button_tran" />
     <Button
-        android:id="@+id/reg_login_btn"
+        android:id="@+id/loadBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Already have an account? LogIn"
+        android:text="Load"
+        android:onClick="onClickLoad"
         android:background="#00000000"
         />
 

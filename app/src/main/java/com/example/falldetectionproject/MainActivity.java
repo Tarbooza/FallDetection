@@ -13,8 +13,16 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.net.Uri;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -22,8 +30,11 @@ import android.util.Log;
 import android.util.TimeUtils;
 import android.view.View;
 import android.view.Menu;
+import android.widget.EditText;
 import android.widget.Toast;
+
 import androidx.fragment.app.DialogFragment;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -44,7 +55,7 @@ import java.util.concurrent.TimeUnit;
 
 import static android.app.PendingIntent.getActivity;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener{
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private AppBarConfiguration mAppBarConfiguration;
     private static final String TAG = "Main Activity";
@@ -80,10 +91,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         NavigationUI.setupWithNavController(navigationView, navController);
 
         Log.d(TAG, "onCreate: Starting Sensor Service");
-        sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         Log.d(TAG, "onCreate: Registered Accelerometer Listener");
+
+
     }
 
     @Override
@@ -118,17 +131,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             double ldAccRound = Double.parseDouble(precision.format(loAccelerationReader));
             Log.d(TAG, "onSensorChanged: " + ldAccRound);
 
-            if (ldAccRound > 13.5) {
+            if (ldAccRound > 15) {
                 Log.d(TAG, "FALL DETECTED!");
-                Toast.makeText(this, "FALL DETECTED!", Toast.LENGTH_LONG).show();
                 {
                     final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
-                    tg.startTone(ToneGenerator.TONE_PROP_BEEP, 15000);
+                    tg.startTone(ToneGenerator.TONE_PROP_BEEP, 1000);
                 }
+                Toast.makeText(this, "FALL DETECTED!", Toast.LENGTH_LONG).show();
+
                 //DialogFragment obj = new DialogActivity();
                 //obj.show(getSupportFragmentManager(), "Title");
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                /*AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Auto-closing Dialog");
                 builder.setMessage("After 5 seconds, this dialog will be closed automatically!");
                 builder.setCancelable(true);
@@ -142,18 +156,28 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         dlg.dismiss(); // when the task active then close the dialog
                         t.cancel();
                     }
-                }, 5000);
+                }, 5000);*/
 
                 {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    //Intent it = new Intent(Intent.ACTION_CALL);
+                    //it.setData(Uri.parse("tel:03120780134"));
+                    Uri callUri = Uri.parse("tel:080011111");
+                    Intent callIntent = new Intent(Intent.ACTION_CALL, callUri);
+                    callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_USER_ACTION);
 
-                    Intent it = new Intent(Intent.ACTION_CALL);
-                    it.setData(Uri.parse("tel:112"));
                     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                         requestPermission();
+
                         return;
                     }
 
-                    startActivity(it);
+                    startActivity(callIntent);
+                    //startActivity(it);
                 }
             }
         }
