@@ -1,20 +1,36 @@
 package com.example.falldetectionproject;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
+import android.net.Uri;
+import java.util.Timer;
+import java.util.TimerTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.util.Log;
+import android.util.TimeUtils;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Toast;
-
+import androidx.fragment.app.DialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -24,12 +40,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import java.text.DecimalFormat;
+import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
+import static android.app.PendingIntent.getActivity;
+
+public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
     private AppBarConfiguration mAppBarConfiguration;
     private static final String TAG = "Main Activity";
-
+    public boolean dismissAlert = false;
     private SensorManager sensorManager;
     Sensor accelerometer;
 
@@ -98,17 +117,57 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             DecimalFormat precision = new DecimalFormat("0.00");
             double ldAccRound = Double.parseDouble(precision.format(loAccelerationReader));
             Log.d(TAG, "onSensorChanged: " + ldAccRound);
-            if (ldAccRound > 13.5) {
-                //Do your stuff
-                Log.d(TAG, "FALL DETECTED!!!!!");
-                Toast.makeText(this, "FALL DETECTED!!!!!", Toast.LENGTH_LONG).show();
 
+            if (ldAccRound > 13.5) {
+                Log.d(TAG, "FALL DETECTED!");
+                Toast.makeText(this, "FALL DETECTED!", Toast.LENGTH_LONG).show();
+                {
+                    final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+                    tg.startTone(ToneGenerator.TONE_PROP_BEEP, 15000);
+                }
+                //DialogFragment obj = new DialogActivity();
+                //obj.show(getSupportFragmentManager(), "Title");
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Auto-closing Dialog");
+                builder.setMessage("After 5 seconds, this dialog will be closed automatically!");
+                builder.setCancelable(true);
+
+                final AlertDialog dlg = builder.create();
+
+                dlg.show();
+                final Timer t = new Timer();
+                t.schedule(new TimerTask() {
+                    public void run() {
+                        dlg.dismiss(); // when the task active then close the dialog
+                        t.cancel();
+                    }
+                }, 5000);
+
+                {
+
+                    Intent it = new Intent(Intent.ACTION_CALL);
+                    it.setData(Uri.parse("tel:112"));
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                        requestPermission();
+                        return;
+                    }
+
+                    startActivity(it);
+                }
             }
         }
-    }
+        }
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        public void requestPermission()
+        {
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.CALL_PHONE},1);
+        }
 
-    }
+               @Override
+                public void onAccuracyChanged (Sensor sensor,int accuracy){
+
+                }
+
+
 }

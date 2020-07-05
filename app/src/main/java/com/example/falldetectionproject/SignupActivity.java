@@ -1,6 +1,5 @@
-package com.example.falldetectionproject.ui.gallery;
+package com.example.falldetectionproject;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.LayoutInflater;
@@ -17,20 +16,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.falldetectionproject.MainActivity;
 import com.example.falldetectionproject.R;
-import com.example.falldetectionproject.ui.home.HomeFragment;
+import com.example.falldetectionproject.ui.gallery.GalleryViewModel;
 
-public class GalleryFragment extends Fragment{
-
+public class SignupActivity {
     private GalleryViewModel galleryViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-
-        galleryViewModel =
-                ViewModelProviders.of(this).get(GalleryViewModel.class);
-        final View root = inflater.inflate(R.layout.fragment_gallery, container, false);
+        final View root = inflater.inflate(R.layout.activity_signup, container, false);
         //final TextView textView = root.findViewById(R.id.text_gallery);
         final Button goButton = root.findViewById(R.id.goButton);
         final EditText regPhoneNo = root.findViewById(R.id.reg_phoneNo);
@@ -42,8 +36,6 @@ public class GalleryFragment extends Fragment{
                 final String phone = regPhoneNo.getText().toString();
                 Toast toast = Toast.makeText(v.getContext(), phone, Toast.LENGTH_SHORT);
                 toast.show();
-                //Intent i = new Intent(GalleryFragment.class, HomeFragment.class);
-                //startActivity(i);
             }
         });
 

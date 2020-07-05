@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "59277346054",
+    "firebase_url": "https://falldetectionproject-a5c22.firebaseio.com",
+    "project_id": "falldetectionproject-a5c22",
+    "storage_bucket": "falldetectionproject-a5c22.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:59277346054:android:db43d77f1b3df8b21c4a87",
+        "android_client_info": {
+          "package_name": "com.example.falldetectionproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "59277346054-mr67pbld0atiqbp8ukl0k5pagoqh2f3v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDace8GPGP2itt2SY5ngNdVbGfK3_EqPxA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "59277346054-mr67pbld0atiqbp8ukl0k5pagoqh2f3v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
